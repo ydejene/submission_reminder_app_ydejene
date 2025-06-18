@@ -34,7 +34,7 @@ echo "-------------------------------------------------"
 #creating the files needed
 echo "creating the files under their respective directories ..."
 touch "$DirName/app/reminder.sh"
-touch "$DirName/modules/fuctions.sh"
+touch "$DirName/modules/functions.sh"
 touch "$DirName/assets/submissions.txt"
 touch "$DirName/config/config.env"
 touch "$DirName/startup.sh"
@@ -78,7 +78,7 @@ function check_submissions {
             echo "Reminder: $student has not submitted the $ASSIGNMENT assignment!"
         fi
     done < <(tail -n +2 "$submissions_file") # Skip the header
-}' >> "$DirName/modules/fuctions.sh"
+}' >> "$DirName/modules/functions.sh"
 
 echo 'student, assignment, submission status
 Chinemerem, Shell Navigation, not submitted
