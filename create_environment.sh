@@ -62,7 +62,7 @@ function check_submissions {
 }
 EOF
 
-cat > "$DirName/assets/submisssions.txt" << 'EOF'
+cat > "$DirName/assets/submissions.txt" << 'EOF'
 student, assignment, submission status
 Chinemerem, Shell Navigation, not submitted
 Chiagoziem, Git, submitted
@@ -83,8 +83,8 @@ EOF
 
 cat > "$DirName/startup.sh" << 'EOF'
 #!/bin/bash
-cd "$(dirname "$0")/app"
-./reminder.sh
+cd "$(dirname "$0")"
+./app/reminder.sh
 EOF
 
 #updating the permissions of all files with the .sh extension to executable
