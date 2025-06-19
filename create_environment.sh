@@ -1,49 +1,28 @@
 #!/bin/bash
-# asking for the user input to create the main directory
+# prompting the user for their name
 read -p "please enter your name: " Uname
 
-#storing the directory name in a variable
-DirName="submission_reminder_$Uname"
-
-#validating if Uname is empty or not
-if [[ -n "$Uname" ]]; then
-	echo "Creating the directory '$DirName' ..."
-	mkdir -p "$DirName"
-	if [[ $? -eq 0 ]]; then 
-		echo "Directory '$DirName' has been created successfully."
-	else
-		"Error: could not create directory '$DirName'."
-		exit 1
-	fi
-else
-	echo "Error: Please provide your name and try again"
-	exit 1
+#validating the user input
+if [[ -z "$Uname" ]]; then
+       echo  "Error: Name cannot be empty."
+       exit 1
 fi
 
-echo "-------------------------------------------------"
+DirName="submission_reminder_$Uname"
+ 
+#Create the main directory, it handles failure as well
+mkdir -p "$DirName" || { echo "Error: Could not create $DirName"; exit 1; } 
+echo "Successfully created directory: $DirName"
 
 #creating the sub-directories 
-echo "Creating the sub-directories ..."
-mkdir -p "$DirName/app"
-mkdir -p "$DirName/modules"
-mkdir -p "$DirName/assets"
-mkdir -p "$DirName/config"
+for sub in app modules assets config; do
+	mkdir -p "$DirName/$sub" || { echo "Error: Could not create $sub"; exit 1; }
+done
+echo "Successfully created sub directories inside $DirName"
 
-echo "sub-directories have been created successfully."
-echo "-------------------------------------------------"
-#creating the files needed
-echo "creating the files under their respective directories ..."
-touch "$DirName/app/reminder.sh"
-touch "$DirName/modules/fuctions.sh"
-touch "$DirName/assets/submissions.txt"
-touch "$DirName/config/config.env"
-touch "$DirName/startup.sh"
-
-echo "The files have been created successfully."
-echo "-------------------------------------------------"
-
-#apppending the datas into the files created
-echo '#!/bin/bash
+#creating the files and appendig data inside them
+cat > "DirName/app/reminder.sh" << 'EOF'
+#!/bin/bash
 
 # Source environment variables and helper functions
 source ./config/config.env
@@ -57,9 +36,11 @@ echo "Assignment: $ASSIGNMENT"
 echo "Days remaining to submit: $DAYS_REMAINING days"
 echo "--------------------------------------------"
 
-check_submissions $submissions_file' >> "$DirName/app/reminder.sh"
+check_submissions $submissions_file
+EOF
 
-echo '#!/bin/bash
+cat > "$DirName/modules/functions.sh" << 'EOF'
+#!/bin/bash
 
 # Function to read submissions file and output students who have not submitted
 function check_submissions {
@@ -78,21 +59,37 @@ function check_submissions {
             echo "Reminder: $student has not submitted the $ASSIGNMENT assignment!"
         fi
     done < <(tail -n +2 "$submissions_file") # Skip the header
-}' >> "$DirName/modules/fuctions.sh"
+}
+EOF
 
-echo 'student, assignment, submission status
+cat > "$DirName/assets/submisssions.txt" << 'EOF'
+student, assignment, submission status
 Chinemerem, Shell Navigation, not submitted
 Chiagoziem, Git, submitted
 Divine, Shell Navigation, not submitted
-Anissa, Shell Basics, submitted' >> "$DirName/assets/submissions.txt"
+Anissa, Shell Basics, submitted
+Elvis, Git, submitted
+Gael, Shell Basics, not submitted
+Eelaf, Shell Navigation, submitted
+Yonas, Git, not submitted
+Leslie, Shell Basics, submitted
+EOF
 
-echo '# This is the config file
+cat > "$DirName/config/config.env" << EOF
+# This is the config file
 ASSIGNMENT="Shell Navigation"
-DAYS_REMAINING=2' >> "$DirName/config/config.env"
+DAYS_REMAINING=2
+EOF
+
+cat > "DirName/startup.sh" << 'EOF'
+#!/bin/bash
+cd "$(dirname "$0")/app"
+./reminder.sh
+EOF
 
 #updating the permissions of all files with the .sh extension to executable
 find "$DirName" -type f -name "*.sh" -exec chmod +x {} \;
+echo "executing permissions set for .sh scripts"
 
-echo "the data has been appended and the files permission has been updated"
-
-
+echo "--------------------------------------"
+echo "Setup complete. Run: cd $DirName && ./startup.sh"

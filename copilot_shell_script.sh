@@ -1,20 +1,36 @@
 #!/bin/bash
+#---- copilot_shell_script.sh ----
+
 #ask the user for an assignment name
 read -p "Please enter an assignment name: " assignName
 
-#check if the config.env file exists 
-env_file=$(find . -type f -name "config.env")
+#locating the main folder that is setup by create_environment.sh safley redirect erro messages if any
+DIR=$(ls -d submission_reminder_* 2>/dev/null)
 
-if [["env_file"]] ; then
-	echo "The file config.env doesn't exist, make sure the file the file exists"
+#check if it  exists 
+if [[ -z "$DIR" ]]; then
+	echo "The directory submission_reminder_* does not exist, make sure you run the create_environment.sh first"
 	exit 1
+fi
 
+CONFIG="$DIR/config/config.env"
+if [[ ! -f "$CONFIG" ]]; then
+	echo "Error: $CONFIG not found in $DIR." >&2
+	exit 1
 fi
 
 #replacing current name in config/config.env on the ASSIGNMENT value (row 2)
- sed -i "s/ASSIGNMENT=./ASSIGNMENT=\"$assignName\"/" "env.file"
+ sed -i "s|ASSIGNMENT=.*|ASSIGNMENT=\"$assignName\"|" "$CONFIG"
+ echo "Updated the ASSIGNMENT in $CONFIG to \"$assignName\""
 
-#Rerun the startup.sh file
-startup= (find . -maxdepth 1 -type f -name "startup.sh")
-echo "running the startup.sh file"
-./$startup
+#Locate the and rerun the startup.sh file
+startup= "$DIR/startup.sh"
+if [[ ! -x "$startup" ]]; then
+	echo "Error: Cannot find executable $startup" >&2
+	exit 1
+fi
+
+echo"-------------------------------"
+
+echo "Running the startup.sh file"
+bash $startup
