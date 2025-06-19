@@ -1,2 +1,3 @@
 #!/bin/bash
-./app/reminder.sh
+cd "$(dirname "$0")/app"
+./reminder.sh

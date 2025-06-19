@@ -3,3 +3,8 @@ Chinemerem, Shell Navigation, not submitted
 Chiagoziem, Git, submitted
 Divine, Shell Navigation, not submitted
 Anissa, Shell Basics, submitted
+Elvis, Git, submitted
+Gael, Shell Basics, not submitted
+Eelaf, Shell Navigation, submitted
+Yonas, Git, not submitted
+Leslie, Shell Basics, submitted
