@@ -21,7 +21,7 @@ done
 echo "Successfully created sub directories inside $DirName"
 
 #creating the files and appendig data inside them
-cat > "DirName/app/reminder.sh" << 'EOF'
+cat > "$DirName/app/reminder.sh" << 'EOF'
 #!/bin/bash
 
 # Source environment variables and helper functions
@@ -81,7 +81,7 @@ ASSIGNMENT="Shell Navigation"
 DAYS_REMAINING=2
 EOF
 
-cat > "DirName/startup.sh" << 'EOF'
+cat > "$DirName/startup.sh" << 'EOF'
 #!/bin/bash
 cd "$(dirname "$0")/app"
 ./reminder.sh
