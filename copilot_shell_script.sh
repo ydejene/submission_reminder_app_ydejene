@@ -4,7 +4,7 @@
 #ask the user for an assignment name
 read -p "Please enter an assignment name: " assignName
 
-#locating the main folder that is setup by create_environment.sh safley redirect erro messages if any
+#locating the main folder that is setup by create_environment.sh safley redirect error messages if any
 DIR=$(ls -d submission_reminder_* 2>/dev/null)
 
 #check if it  exists 
@@ -23,14 +23,14 @@ fi
  sed -i "s|ASSIGNMENT=.*|ASSIGNMENT=\"$assignName\"|" "$CONFIG"
  echo "Updated the ASSIGNMENT in $CONFIG to \"$assignName\""
 
-#Locate the and rerun the startup.sh file
-startup= "$DIR/startup.sh"
+#Locate and re-run the startup.sh file
+startup="$DIR/startup.sh"
 if [[ ! -x "$startup" ]]; then
 	echo "Error: Cannot find executable $startup" >&2
 	exit 1
 fi
 
-echo"-------------------------------"
+echo "-------------------------------"
 
 echo "Running the startup.sh file"
 bash $startup
